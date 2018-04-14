@@ -1,0 +1,52 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.8.RELEASE")
+    }
+}
+
+plugins {
+    id 'net.ltgt.apt' version '0.8'
+    id "org.flywaydb.flyway" version "5.0.3"
+    id 'java'
+}
+
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+
+repositories {
+    mavenCentral()
+    maven { url "https://repository.jboss.org/nexus/content/repositories/releases" }
+}
+
+dependencies {
+    // Spring related
+    compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
+    compile("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}")
+
+    // Database configuration
+    compile("mysql:mysql-connector-java:${mysqlConnectorVersion}")
+    compile("org.flywaydb:flyway-core:${flywayVersion}")
+
+    // Boilerplate generation
+    compile("org.projectlombok:lombok:${lombokVersion}")
+    compile("org.mapstruct:mapstruct-jdk8:${mapstructVersion}")
+    apt("org.projectlombok:lombok:${lombokVersion}")
+    apt("org.mapstruct:mapstruct-processor:${mapstructVersion}")
+
+    // REST
+    compile("org.glassfish.jersey.core:jersey-common:${jerseyCommonVersion}")
+
+    //Documentation
+    compile("io.springfox:springfox-swagger2:${swaggerVersion}")
+    compile("io.springfox:springfox-swagger-ui:${swaggerVersion}")
+}
+
+flyway {
+    url = 'jdbc:mysql://localhost:3306/mytrip?autoReconnect=true&useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC'
+    user = 'admin'
+    password = '1234'
+    schemas = ['mytrip']
+}
