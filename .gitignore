@@ -1,2 +1,5 @@
 build/
 mytrip/.gradle/
+.idea/
+mytrip/gradle/
+mytrip/gradle/wrapper/

@@ -5,7 +5,8 @@ CREATE TABLE `trip` (
 	`start` TIMESTAMP NOT NULL,
 	`end` TIMESTAMP NOT NULL,
 	`poster` varchar(1000) UNIQUE,
-	`presentation` varchar(1000) UNIQUE
+	`presentation` varchar(1000) UNIQUE,
+	`cached_map` varchar(1000) UNIQUE
 );
 
 CREATE TABLE `waypoint` (

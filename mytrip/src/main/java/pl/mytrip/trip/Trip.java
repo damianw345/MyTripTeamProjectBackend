@@ -39,4 +39,7 @@ class Trip {
 
     @OneToMany(mappedBy = "trip", cascade = CascadeType.REMOVE)
     private Set<Waypoint> points;
+
+    @Column(length = 1000)
+    private String cachedMap;
 }
