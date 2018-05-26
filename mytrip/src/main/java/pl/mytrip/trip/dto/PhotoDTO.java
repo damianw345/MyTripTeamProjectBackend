@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class PhotoDTO {
 
-    private Long id;
+    private Long waypointId;
     private String thumbnailStorageUrl;
     private String fullImageStorageUrl;
 }
