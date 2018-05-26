@@ -48,13 +48,11 @@ public class PhotoService {
                     + photo.getPhotoId());
 
             blob.uploadFromByteArray(photoBytes, 0, photoBytes.length);
-//            System.out.println("response: " + queueJobService.addThumbnailJob());
+            String thumbnailUrl = queueJobService.addThumbnailJob(blob.getUri().toString());
 
-//            System.out.println("properties: " + blob.getProperties().getContentType());
-
-            for (ListBlobItem blobItem : cloudBlobContainer.listBlobs()) {
-//                System.out.println(blobItem.getUri());
-            }
+//            for (ListBlobItem blobItem : cloudBlobContainer.listBlobs()) {
+//
+//            }
 
             return blob.getUri().toString();
         } catch (URISyntaxException | StorageException | IOException e) {

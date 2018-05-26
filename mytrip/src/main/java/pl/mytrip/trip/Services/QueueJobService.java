@@ -3,6 +3,8 @@ package pl.mytrip.trip.Services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.mytrip.trip.Model.Photo;
+import pl.mytrip.trip.Model.PhotoRepository;
 import pl.mytrip.trip.Trip;
 import pl.mytrip.trip.TripMapperImpl;
 import pl.mytrip.trip.TripRepository;
@@ -24,30 +26,21 @@ public class QueueJobService {
 
     private final TripRepository tripRepository;
     private final TripMapperImpl tripMapper;
+    private final PhotoRepository photoRepository;
 
-    public String addThumbnailJob() {
+    public String addThumbnailJob(String photoUrl) {
         return executePost("https://mediaservice-trzye.azurewebsites.net/mediaService/addThumbnailJob",
+                "{\"fullImageStorageUrl\": " + photoUrl + "}");
+    }
+
+    public String addPosterJob(Long tripId) {
+        return executePost("https://mediaservice-trzye.azurewebsites.net/mediaService/addPosterJob",
                 "{\"fullImageStorageUrl\": \"\"}");
     }
 
-    public TripDTO addPosterJob(Long tripId) {
-        System.out.println("Reguch to koks");
-        Trip trip = tripRepository.findOne(tripId);
-//        TripDTO tripDTO = Optional.ofNullable(tripRepository.findOne(tripId))
-//                .map(tripMapper::toDto)
-//                .orElseThrow(NotFoundException::new);
-
-        System.out.println(trip.toString());
-
-        return null;
-//        return executePost("https://mediaservice-trzye.azurewebsites.net/mediaService/addPosterJob",
-//                "{\"fullImageStorageUrl\": \"\"}");
-    }
-
-    public String addVideoPresentationJob() {
-//        return executePost("https://mediaservice-trzye.azurewebsites.net/mediaService/addThumbnailJob",
-//                "{\"fullImageStorageUrl\": \"\"}");
-        return null;
+    public String addVideoPresentationJob(Long tripId) {
+        return executePost("https://mediaservice-trzye.azurewebsites.net/mediaService/addVideoPresentationJob",
+                "{\"fullImageStorageUrl\": \"\"}");
     }
 
     private static String executePost(String targetURL, String urlParameters) {
@@ -90,5 +83,36 @@ public class QueueJobService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public void addPosterUrl(Long tripId, String posterUrl) {
+        Trip trip = Optional.ofNullable(tripRepository.findOne(tripId))
+                .orElseThrow(NotFoundException::new);
+        trip.setPoster(posterUrl);
+        tripRepository.save(trip);
+    }
+
+    public void addVideoPresentationUrl(Long tripId, String videoPresentationUrl) {
+        Trip trip = Optional.ofNullable(tripRepository.findOne(tripId))
+                .orElseThrow(NotFoundException::new);
+        trip.setPresentation(videoPresentationUrl);
+        tripRepository.save(trip);
+    }
+
+    public void addThumbnailUrl(Long photoId, String thumbnailUrl) {
+        Photo photo = Optional.ofNullable(photoRepository.findOne(photoId))
+                .orElseThrow(NotFoundException::new);
+        photo.setThumbnailUrl(thumbnailUrl);
+        photoRepository.save(photo);
+    }
+
+    public String getPoster(Long tripId) {
+        return Optional.ofNullable(tripRepository.findOne(tripId))
+                .orElseThrow(NotFoundException::new).getPoster();
+    }
+
+    public String getVideoPresentation(Long tripId) {
+        return Optional.ofNullable(tripRepository.findOne(tripId))
+                .orElseThrow(NotFoundException::new).getPresentation();
     }
 }
