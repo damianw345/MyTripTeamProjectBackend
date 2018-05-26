@@ -13,8 +13,11 @@ import pl.mytrip.trip.Model.PhotoRepository;
 import pl.mytrip.trip.StorageConnector;
 import pl.mytrip.trip.dto.PhotoDTO;
 
-import java.io.IOException;
+import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Base64;
 import java.util.Date;
 
 @Data
@@ -24,17 +27,20 @@ public class PhotoService {
 
     private final StorageConnector storageConnector;
     private final PhotoRepository photoRepository;
+    private final QueueJobService queueJobService;
 
     public String addPhoto(Long tripId, PhotoDTO dto, byte[] photoBytes) {
         CloudBlobContainer cloudBlobContainer = storageConnector.getStorageContainer();
         CloudBlob blob;
         try {
+
+
             Photo photo = new Photo();
-            photo.setPhotoId((long)1);
+            photo.setPhotoId((long) 1);
             photo.setDate(new Date());
             photo.setUrl("url");
             photo.setThumbnailUrl("thumbnail");
-            photo.setWaypointId((long)1);
+            photo.setWaypointId((long) 1);
             photoRepository.save(photo);
 
             blob = cloudBlobContainer.getBlockBlobReference("photo"
@@ -42,6 +48,8 @@ public class PhotoService {
                     + photo.getPhotoId());
 
             blob.uploadFromByteArray(photoBytes, 0, photoBytes.length);
+//            System.out.println("response: " + queueJobService.addThumbnailJob());
+
 //            System.out.println("properties: " + blob.getProperties().getContentType());
 
             for (ListBlobItem blobItem : cloudBlobContainer.listBlobs()) {
@@ -84,4 +92,6 @@ public class PhotoService {
             e.printStackTrace();
         }
     }
+
+
 }

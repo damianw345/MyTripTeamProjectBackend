@@ -12,7 +12,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Data
 @Entity(name = "trip")
-class Trip {
+public class Trip {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
