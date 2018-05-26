@@ -42,6 +42,10 @@ dependencies {
     //Documentation
     compile("io.springfox:springfox-swagger2:${swaggerVersion}")
     compile("io.springfox:springfox-swagger-ui:${swaggerVersion}")
+
+    compile group: 'com.microsoft.azure', name: 'azure-storage', version: '2.0.0'
+    compile group: 'org.apache.commons', name: 'commons-io', version: '1.3.2'
+
 }
 
 flyway {
