@@ -42,10 +42,10 @@ public class PhotoService {
                     + photo.getPhotoId());
 
             blob.uploadFromByteArray(photoBytes, 0, photoBytes.length);
-            System.out.println("properties: " + blob.getProperties().getContentType());
+//            System.out.println("properties: " + blob.getProperties().getContentType());
 
             for (ListBlobItem blobItem : cloudBlobContainer.listBlobs()) {
-                System.out.println(blobItem.getUri());
+//                System.out.println(blobItem.getUri());
             }
 
             return blob.getUri().toString();
