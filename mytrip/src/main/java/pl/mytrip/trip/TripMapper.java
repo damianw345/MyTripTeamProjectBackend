@@ -17,6 +17,7 @@ public interface TripMapper {
     @Mapping(target = "tripId", ignore = true)
     @Mapping(target = "poster", ignore = true)
     @Mapping(target = "presentation", ignore = true)
+    @Mapping(target = "cachedMap", ignore = true)
     Trip toEntity(TripDTO dto);
 
     TripDTO toDto(Trip entity);
