@@ -43,4 +43,7 @@ public class Trip {
 
     @Column(length = 1000)
     private String cachedMap;
+
+    @Column(nullable = false)
+    private String owner;
 }
