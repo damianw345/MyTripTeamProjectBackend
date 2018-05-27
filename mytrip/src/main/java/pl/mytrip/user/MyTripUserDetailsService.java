@@ -20,8 +20,7 @@ public class MyTripUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) {
         try {
-            // TODO change to userRepository.findByUsername(username)
-            User user = userRepository.findAll().stream().filter(u -> u.getUsername().equals(username)).findFirst().get();
+            User user = userRepository.findOne(username);
             if (user == null) {
                 return null;
             }

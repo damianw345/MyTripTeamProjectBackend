@@ -2,6 +2,7 @@ package pl.mytrip.trip;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +19,15 @@ public interface TripMapper {
     @Mapping(target = "poster", ignore = true)
     @Mapping(target = "presentation", ignore = true)
     @Mapping(target = "cachedMap", ignore = true)
+    @Mapping(target = "owner", ignore = true)
     Trip toEntity(TripDTO dto);
+
+    @Mapping(target = "tripId", ignore = true)
+    @Mapping(target = "poster", ignore = true)
+    @Mapping(target = "presentation", ignore = true)
+    @Mapping(target = "cachedMap", ignore = true)
+    @Mapping(target = "owner", ignore = true)
+    Trip updateEntity(TripDTO dto, @MappingTarget Trip trip);
 
     TripDTO toDto(Trip entity);
 

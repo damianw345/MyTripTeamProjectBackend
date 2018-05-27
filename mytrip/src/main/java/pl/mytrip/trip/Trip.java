@@ -12,7 +12,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Data
 @Entity(name = "trip")
-class Trip {
+public class Trip {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,4 +42,7 @@ class Trip {
 
     @Column(length = 1000)
     private String cachedMap;
+
+    @Column(nullable = false)
+    private String owner;
 }

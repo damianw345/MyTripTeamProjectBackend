@@ -4,23 +4,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Entity(name = "user")
-class User {
+public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @Column(nullable = false)
     private String username;
 
     @Column(nullable = false)
     private String password;
-
-
 }
