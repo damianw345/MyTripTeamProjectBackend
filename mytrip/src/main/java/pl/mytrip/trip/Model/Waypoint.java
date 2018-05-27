@@ -14,7 +14,8 @@ import java.util.Date;
 public class Waypoint {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long waypointId;
 
     @Column(nullable = false, columnDefinition="Decimal(11,8)")

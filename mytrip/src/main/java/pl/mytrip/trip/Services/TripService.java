@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.mytrip.trip.Model.Trip;
-import pl.mytrip.trip.TripMapper;
+import pl.mytrip.trip.Mappers.TripMapper;
 import pl.mytrip.trip.Repositories.TripRepository;
 import pl.mytrip.trip.DTOs.BasicTripDTO;
 import pl.mytrip.trip.DTOs.TripDTO;

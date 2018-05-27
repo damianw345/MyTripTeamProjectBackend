@@ -1,4 +1,4 @@
-package pl.mytrip.trip;
+package pl.mytrip.trip.Mappers;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
