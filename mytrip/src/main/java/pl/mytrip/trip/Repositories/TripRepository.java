@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import pl.mytrip.trip.Model.Trip;
 
 @Repository
-public interface TripRepository extends JpaRepository<Trip, Long> {
+public interface TripRepository extends JpaRepository<Trip, String> {
 
     Page<Trip> findByOwner(String owner, Pageable pageable);
 }

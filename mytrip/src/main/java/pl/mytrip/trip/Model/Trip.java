@@ -3,6 +3,7 @@ package pl.mytrip.trip.Model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 import pl.mytrip.trip.Model.Waypoint;
 
 import javax.persistence.*;
@@ -16,8 +17,9 @@ import java.util.Set;
 public class Trip {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long tripId;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String tripId;
 
     @Column(nullable = false)
     private String name;

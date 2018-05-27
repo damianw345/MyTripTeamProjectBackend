@@ -1,7 +1,7 @@
 SET SQL_MODE='ALLOW_INVALID_DATES';
 
 CREATE TABLE `trip` (
-	`trip_id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	`trip_id` varchar(36) NOT NULL PRIMARY KEY,
 	`name` varchar(255) NOT NULL,
 	`description` TEXT,
 	`start` TIMESTAMP NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE `trip` (
 
 CREATE TABLE `waypoint` (
 	`waypoint_id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	`trip_id` BIGINT NOT NULL,
+	`trip_id` varchar(36) NOT NULL,
 	`latitude` DECIMAL(10,8) NOT NULL,
 	`longitude` DECIMAL(11,8) NOT NULL,
 	`date` TIMESTAMP NOT NULL,

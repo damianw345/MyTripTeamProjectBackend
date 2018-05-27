@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 public class TripDTO {
 
-    private Long tripId;
+    private String tripId;
     private String name;
     private String description;
     private List<TripPointDTO> points;

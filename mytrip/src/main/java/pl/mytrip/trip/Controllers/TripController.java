@@ -29,18 +29,18 @@ public class TripController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    TripDTO getTrip(@PathVariable Long id) {
+    TripDTO getTrip(@PathVariable String id) {
         return tripService.getTrip(id);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    TripDTO updateTrip(@RequestBody TripDTO dto, @PathVariable Long id) {
+    TripDTO updateTrip(@RequestBody TripDTO dto, @PathVariable String id) {
         return tripService.updateTrip(dto, id);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void deleteTrip(@PathVariable Long id) {
+    void deleteTrip(@PathVariable String id) {
         tripService.deleteTrip(id);
     }
 }

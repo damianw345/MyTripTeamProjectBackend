@@ -33,7 +33,7 @@ public class TripService {
                 .orElseThrow(NotFoundException::new);
     }
 
-    public TripDTO getTrip(Long id) {
+    public TripDTO getTrip(String id) {
         return Optional.ofNullable(tripRepository.findOne(id))
                 .map(this::checkTripOwner)
                 .map(tripMapper::toDto)
@@ -51,7 +51,7 @@ public class TripService {
     }
 
     @Transactional
-    public TripDTO updateTrip(TripDTO dto, Long id) {
+    public TripDTO updateTrip(TripDTO dto, String id) {
         return Optional.ofNullable(dto)
                 .map(trip -> tripMapper.updateEntity(trip, tripRepository.findOne(id)))
                 .map(this::checkTripOwner)
@@ -61,7 +61,7 @@ public class TripService {
     }
 
     @Transactional
-    public void deleteTrip(Long id) {
+    public void deleteTrip(String id) {
         Optional.ofNullable(tripRepository.findOne(id))
                 .map(this::checkTripOwner)
                 .map(Trip::getTripId)
