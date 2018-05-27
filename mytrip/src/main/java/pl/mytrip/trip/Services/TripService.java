@@ -1,12 +1,16 @@
-package pl.mytrip.trip;
+package pl.mytrip.trip.Services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import pl.mytrip.trip.dto.BasicTripDTO;
-import pl.mytrip.trip.dto.TripDTO;
+import org.springframework.transaction.annotation.Transactional;
+import pl.mytrip.trip.DTOs.BasicTripDTO;
+import pl.mytrip.trip.DTOs.TripDTO;
+import pl.mytrip.trip.Mappers.TripMapper;
+import pl.mytrip.trip.Model.Trip;
+import pl.mytrip.trip.Repositories.TripRepository;
 import pl.mytrip.user.LoggedUserGetter;
 
 import javax.ws.rs.BadRequestException;
@@ -15,6 +19,7 @@ import javax.ws.rs.NotFoundException;
 import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TripService {
 
@@ -22,13 +27,21 @@ public class TripService {
     private final TripMapper tripMapper;
     private final LoggedUserGetter loggedUserGetter;
 
-    Page<BasicTripDTO> getTrips(Pageable pageable) {
+    public Page<BasicTripDTO> getTrips(Pageable pageable) {
         return Optional.ofNullable(tripRepository.findByOwner(loggedUserGetter.getLoggedUserLogin(), pageable))
                 .map(trips -> tripMapper.toDtoPage(trips, pageable))
                 .orElseThrow(NotFoundException::new);
     }
 
-    TripDTO addTrip(TripDTO dto) {
+    public TripDTO getTrip(Long id) {
+        return Optional.ofNullable(tripRepository.findOne(id))
+                .map(this::checkTripOwner)
+                .map(tripMapper::toDto)
+                .orElseThrow(NotFoundException::new);
+    }
+
+    @Transactional
+    public TripDTO addTrip(TripDTO dto) {
         return Optional.ofNullable(dto)
                 .map(tripMapper::toEntity)
                 .map(this::updateTripOwner)
@@ -37,7 +50,8 @@ public class TripService {
                 .orElseThrow(BadRequestException::new);
     }
 
-    TripDTO updateTrip(TripDTO dto, Long id) {
+    @Transactional
+    public TripDTO updateTrip(TripDTO dto, Long id) {
         return Optional.ofNullable(dto)
                 .map(trip -> tripMapper.updateEntity(trip, tripRepository.findOne(id)))
                 .map(this::checkTripOwner)
@@ -46,14 +60,8 @@ public class TripService {
                 .orElseThrow(BadRequestException::new);
     }
 
-    TripDTO getTrip(Long id) {
-        return Optional.ofNullable(tripRepository.findOne(id))
-                .map(this::checkTripOwner)
-                .map(tripMapper::toDto)
-                .orElseThrow(NotFoundException::new);
-    }
-
-    void deleteTrip(Long id) {
+    @Transactional
+    public void deleteTrip(Long id) {
         Optional.ofNullable(tripRepository.findOne(id))
                 .map(this::checkTripOwner)
                 .map(Trip::getTripId)

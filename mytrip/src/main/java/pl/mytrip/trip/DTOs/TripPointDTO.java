@@ -1,9 +1,8 @@
-package pl.mytrip.trip.dto;
+package pl.mytrip.trip.DTOs;
 
 import lombok.Data;
 
 import java.util.Date;
-import java.util.List;
 
 @Data
 public class TripPointDTO {

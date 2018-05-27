@@ -1,4 +1,4 @@
-package pl.mytrip.trip;
+package pl.mytrip.trip.Mappers;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -6,9 +6,11 @@ import org.mapstruct.MappingTarget;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import pl.mytrip.trip.dto.BasicTripDTO;
-import pl.mytrip.trip.dto.TripDTO;
-import pl.mytrip.trip.dto.TripPointDTO;
+import pl.mytrip.trip.Model.Trip;
+import pl.mytrip.trip.Model.Waypoint;
+import pl.mytrip.trip.DTOs.BasicTripDTO;
+import pl.mytrip.trip.DTOs.TripDTO;
+import pl.mytrip.trip.DTOs.TripPointDTO;
 
 import java.util.List;
 

@@ -1,8 +1,9 @@
-package pl.mytrip.trip;
+package pl.mytrip.trip.Model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.mytrip.trip.Model.Waypoint;
 
 import javax.persistence.*;
 import java.util.Date;

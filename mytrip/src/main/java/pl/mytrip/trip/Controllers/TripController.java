@@ -1,4 +1,4 @@
-package pl.mytrip.trip;
+package pl.mytrip.trip.Controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,13 +6,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import pl.mytrip.trip.dto.BasicTripDTO;
-import pl.mytrip.trip.dto.TripDTO;
+import pl.mytrip.trip.Services.TripService;
+import pl.mytrip.trip.DTOs.BasicTripDTO;
+import pl.mytrip.trip.DTOs.TripDTO;
 
 @RestController
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @RequestMapping("/api/trips")
-class TripController {
+public class TripController {
 
     private final TripService tripService;
 
