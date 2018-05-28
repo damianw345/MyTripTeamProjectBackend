@@ -17,13 +17,13 @@ public class WaypointController {
 
     @RequestMapping(value = "/{tripId}/waypoints", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    WaypointDTO addWaypoint(@RequestBody BasicWaypointDTO dto, @PathVariable String tripId) {
-        return waypointService.addWaypoint(dto, tripId);
+    WaypointDTO addWaypoint(@RequestBody WaypointDTO dto, @PathVariable String tripId) {
+        return waypointService.addWaypoint(tripId, dto);
     }
 
     @RequestMapping(value = "/{tripId}/waypoints/{wayId}", method = RequestMethod.PUT)
-    WaypointDTO updateWaypoint(@RequestBody BasicWaypointDTO dto, @PathVariable String tripId, @PathVariable Long wayId) {
-        return waypointService.updateWaypoint(dto, tripId, wayId);
+    WaypointDTO updateWaypoint(@RequestBody WaypointDTO dto, @PathVariable String tripId, @PathVariable Long wayId) {
+        return waypointService.updateWaypoint(dto, wayId);
     }
 
     @RequestMapping(value = "/{tripId}/waypoints/{wayId}", method = RequestMethod.DELETE)

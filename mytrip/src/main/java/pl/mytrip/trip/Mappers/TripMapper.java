@@ -6,11 +6,11 @@ import org.mapstruct.MappingTarget;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import pl.mytrip.trip.Model.Trip;
-import pl.mytrip.trip.Model.Waypoint;
 import pl.mytrip.trip.DTOs.BasicTripDTO;
 import pl.mytrip.trip.DTOs.TripDTO;
-import pl.mytrip.trip.DTOs.TripPointDTO;
+import pl.mytrip.trip.DTOs.WaypointDTO;
+import pl.mytrip.trip.Model.Trip;
+import pl.mytrip.trip.Model.Waypoint;
 
 import java.util.List;
 
@@ -22,6 +22,7 @@ public interface TripMapper {
     @Mapping(target = "presentation", ignore = true)
     @Mapping(target = "cachedMap", ignore = true)
     @Mapping(target = "owner", ignore = true)
+    @Mapping(source = "waypoints", target = "points")
     Trip toEntity(TripDTO dto);
 
     @Mapping(target = "tripId", ignore = true)
@@ -29,15 +30,21 @@ public interface TripMapper {
     @Mapping(target = "presentation", ignore = true)
     @Mapping(target = "cachedMap", ignore = true)
     @Mapping(target = "owner", ignore = true)
+    @Mapping(target = "points", ignore = true)
     Trip updateEntity(TripDTO dto, @MappingTarget Trip trip);
 
+    @Mapping(source = "points", target = "waypoints")
     TripDTO toDto(Trip entity);
 
-    @Mapping(target = "waypointId", ignore = true)
     @Mapping(target = "trip", ignore = true)
-    Waypoint toEntity(TripPointDTO dto);
+    Waypoint toEntity(WaypointDTO dto);
 
-    TripPointDTO toDto(Waypoint entity);
+    @Mapping(target = "trip", ignore = true)
+    Waypoint updateEntity(WaypointDTO dto, @MappingTarget Waypoint entity);
+
+    @Mapping(target = "photos", ignore = true)
+    @Mapping(target = "videos", ignore = true)
+    WaypointDTO toDto(Waypoint entity);
 
     BasicTripDTO toBasicDto(Trip entity);
 
