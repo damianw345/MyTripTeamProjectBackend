@@ -7,10 +7,8 @@ import java.util.Date;
 
 @Data
 @AllArgsConstructor
-public class WaypointDTO {
+public class BasicWaypointDTO {
 
-    private String tripId;
-    private Long waypointId;
     private Float longitude;
     private Float latitude;
     private Date date;

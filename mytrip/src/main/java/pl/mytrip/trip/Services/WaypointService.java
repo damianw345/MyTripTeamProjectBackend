@@ -3,6 +3,7 @@ package pl.mytrip.trip.Services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.mytrip.trip.DTOs.BasicWaypointDTO;
 import pl.mytrip.trip.DTOs.WaypointDTO;
 import pl.mytrip.trip.Mappers.WaypointMapperClass;
 import pl.mytrip.trip.Model.Waypoint;
@@ -18,18 +19,19 @@ public class WaypointService {
     private final WaypointRepository waypointRepository;
     private final WaypointMapperClass waypointMapper;
 
-    public WaypointDTO addWaypoint(WaypointDTO dto) {
+
+    public WaypointDTO addWaypoint(BasicWaypointDTO dto, String tripId) {
         Waypoint entity = Optional.ofNullable(dto)
-                .map(waypointMapper::toEntity)
+                .map(f -> waypointMapper.toEntity(dto, tripId))
                 .orElseThrow(BadRequestException::new);
         return waypointMapper.toDto(waypointRepository.save(entity));
     }
 
-    public WaypointDTO updateWaypoint(WaypointDTO dto, Long id) {
+    public WaypointDTO updateWaypoint(BasicWaypointDTO dto, String tripId, Long wayId) {
         Waypoint entity = Optional.ofNullable(dto)
-                .map(waypointMapper::toEntity)
+                .map(f -> waypointMapper.toEntity(dto, tripId))
                 .orElseThrow(BadRequestException::new);
-        entity.setWaypointId(id);
+        entity.setWaypointId(wayId);
         return waypointMapper.toDto(waypointRepository.save(entity));
     }
 

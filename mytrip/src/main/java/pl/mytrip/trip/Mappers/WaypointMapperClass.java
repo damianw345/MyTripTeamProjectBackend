@@ -3,6 +3,7 @@ package pl.mytrip.trip.Mappers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import pl.mytrip.trip.DTOs.BasicWaypointDTO;
 import pl.mytrip.trip.DTOs.WaypointDTO;
 import pl.mytrip.trip.Model.Waypoint;
 import pl.mytrip.trip.Repositories.TripRepository;
@@ -13,11 +14,11 @@ public class WaypointMapperClass {
 
     private final TripRepository tripRepository;
 
-    public Waypoint toEntity(WaypointDTO dto){
-        return new Waypoint(null, dto.getLongitude(), dto.getLatitude(), dto.getDate(), tripRepository.findOne(dto.getTripId()));
+    public Waypoint toEntity(BasicWaypointDTO dto, String tripId){
+        return new Waypoint(null, dto.getLongitude(), dto.getLatitude(), dto.getDate(), tripRepository.findOne(tripId));
     }
 
     public WaypointDTO toDto(Waypoint entity){
-        return new WaypointDTO(entity.getWaypointId(), entity.getLongitude(), entity.getLatitude(), entity.getDate());
+        return new WaypointDTO(entity.getTrip().getTripId(), entity.getWaypointId(), entity.getLongitude(), entity.getLatitude(), entity.getDate());
     }
 }
