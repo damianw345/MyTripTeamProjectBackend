@@ -52,21 +52,6 @@ public interface TripMapper {
 
     List<BasicTripDTO> toDto(List<Trip> entities);
 
-//    default Trip updateEntity(TripDTO dto, @MappingTarget Trip entity) {
-//        if (entity == null || dto == null) {
-//            throw new BadRequestException();
-//        }
-//        entity.setStart(dto.getStart());
-//        entity.setDescription(dto.getDescription());
-//        entity.setEnd(dto.getEnd());
-//        entity.setName(dto.getName());
-//        entity.setPoints(dto.getWaypoints()
-//                .stream()
-//                .map(this::toEntity)
-//                .collect(Collectors.toSet()));
-//        return entity;
-//    }
-
     default Page<BasicTripDTO> toDtoPage(Page<Trip> entities, Pageable pageable) {
         return new PageImpl<>(toDto(entities.getContent()), pageable, entities.getTotalElements());
     }
