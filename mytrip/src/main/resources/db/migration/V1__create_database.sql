@@ -13,11 +13,12 @@ CREATE TABLE `trip` (
 
 CREATE TABLE `waypoint` (
 	`waypoint_id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	`trip_id` BIGINT NOT NULL,
-	`latitude` DECIMAL(10,8) NOT NULL,
-	`longitude` DECIMAL(11,8) NOT NULL,
+	`trip_id` BIGINT,
+	`latitude` FLOAT NOT NULL,
+	`longitude` FLOAT NOT NULL,
 	`date` TIMESTAMP NOT NULL,
-	FOREIGN KEY (`trip_id`) REFERENCES `trip`(`trip_id`) ON DELETE CASCADE
+	KEY `fk_trip_idx` (`trip_id`),
+	CONSTRAINT `fk_waypoint_trip` FOREIGN KEY (`trip_id`) REFERENCES `trip`(`trip_id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE `photo` (

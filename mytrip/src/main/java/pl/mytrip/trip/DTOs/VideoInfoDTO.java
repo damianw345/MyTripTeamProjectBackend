@@ -5,9 +5,9 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class WaypointDTO {
+public class VideoInfoDTO {
 
-    private Float longitude;
-    private Float latitude;
+    private Long videoId;
     private Date date;
+    private String url;
 }

@@ -14,20 +14,19 @@ import java.util.Date;
 public class Waypoint {
 
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long waypointId;
 
-    @Column(nullable = false, columnDefinition="Decimal(11,8)")
+    @Column(nullable = false)
     private Float longitude;
 
-    @Column(nullable = false, columnDefinition="Decimal(10,8)")
+    @Column(nullable = false)
     private Float latitude;
 
     @Column(nullable = false)
     private Date date;
 
     @ManyToOne
-    @JoinColumn(name = "trip_id", nullable = false)
+    @JoinColumn(name = "trip_id")
     private Trip trip;
 }

@@ -3,14 +3,15 @@ package pl.mytrip.trip.DTOs;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class TripPointDTO {
 
-    private Date date;
-    private Float longitude;
+    private Long waypointId;
     private Float latitude;
-    // TODO
-//    private List<PhotoDTO> photos;
-//    private List<VideoDTO> videos;
+    private Float longitude;
+    private Date date;
+    private List<PhotoInfoDTO> photos;
+    private List<VideoInfoDTO> videos;
 }

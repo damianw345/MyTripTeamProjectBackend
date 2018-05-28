@@ -8,9 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.mytrip.trip.DTOs.BasicTripDTO;
 import pl.mytrip.trip.DTOs.TripDTO;
+import pl.mytrip.trip.DTOs.TripPointDTO;
 import pl.mytrip.trip.Mappers.TripMapper;
 import pl.mytrip.trip.Model.Trip;
 import pl.mytrip.trip.Repositories.TripRepository;
+import pl.mytrip.trip.Repositories.WaypointRepository;
 import pl.mytrip.user.LoggedUserGetter;
 
 import javax.ws.rs.BadRequestException;
@@ -26,6 +28,7 @@ public class TripService {
     private final TripRepository tripRepository;
     private final TripMapper tripMapper;
     private final LoggedUserGetter loggedUserGetter;
+    private final WaypointRepository waypointRepository;
 
     public Page<BasicTripDTO> getTrips(Pageable pageable) {
         return Optional.ofNullable(tripRepository.findByOwner(loggedUserGetter.getLoggedUserLogin(), pageable))
@@ -46,15 +49,19 @@ public class TripService {
                 .map(tripMapper::toEntity)
                 .map(this::updateTripOwner)
                 .map(tripRepository::save)
+                .map(this::updateTripWaypoints)
                 .map(tripMapper::toDto)
                 .orElseThrow(BadRequestException::new);
     }
 
     @Transactional
     public TripDTO updateTrip(TripDTO dto, Long id) {
-        return Optional.ofNullable(dto)
-                .map(trip -> tripMapper.updateEntity(trip, tripRepository.findOne(id)))
+        Trip entity = Optional.ofNullable(tripRepository.findOne(id))
                 .map(this::checkTripOwner)
+                .orElseThrow(NotFoundException::new);
+        persistTripWaypoints(dto);
+        return Optional.of(dto)
+                .map(trip -> tripMapper.updateEntity(trip, entity))
                 .map(tripRepository::save)
                 .map(tripMapper::toDto)
                 .orElseThrow(BadRequestException::new);
@@ -78,5 +85,22 @@ public class TripService {
     private Trip updateTripOwner(Trip trip) {
         trip.setOwner(loggedUserGetter.getLoggedUserLogin());
         return trip;
+    }
+
+    private Trip updateTripWaypoints(Trip trip) {
+        trip.getPoints()
+                .forEach(waypoint -> waypoint.setTrip(trip));
+        return trip;
+    }
+
+    private void persistTripWaypoints(TripDTO dto) {
+        if (dto == null) {
+            throw new BadRequestException();
+        }
+        for(TripPointDTO waypointDTO : dto.getWaypoints()) {
+            Optional.ofNullable(waypointRepository.findOne(waypointDTO.getWaypointId()))
+                    .map(waypointEntity -> tripMapper.updateEntity(waypointDTO, waypointEntity))
+                    .map(waypointRepository::save);
+        }
     }
 }

@@ -11,7 +11,7 @@ public class TripDTO {
     private Long tripId;
     private String name;
     private String description;
-    private List<TripPointDTO> points;
     private Date start;
     private Date end;
+    private List<TripPointDTO> waypoints;
 }

@@ -17,7 +17,7 @@ public class WaypointController {
     @RequestMapping(value = "/{id}/waypoints", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     WaypointDTO addWaypoint(@RequestBody WaypointDTO dto, @PathVariable Long id) {
-        return waypointService.addWaypoint(dto);
+        return waypointService.addWaypoint(id, dto);
     }
 
     @RequestMapping(value = "/{tripId}/waypoints/{wayId}", method = RequestMethod.PUT)
