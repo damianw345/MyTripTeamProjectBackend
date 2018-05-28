@@ -35,22 +35,24 @@ public class WaypointService {
                 .map(waypoint -> { waypoint.setTrip(entity); return waypoint; })
                 .map(waypointRepository::save)
                 .map(waypointMapper::toDto)
+                .map(waypointDTO -> {waypointDTO.setTripId(tripId); return waypointDTO;})
                 .orElseThrow(BadRequestException::new);
     }
 
-    public WaypointDTO updateWaypoint(WaypointDTO dto, Long id) {
-        Waypoint entity = getWaypointEntityAndCheckOwnership(id);
+    public WaypointDTO updateWaypoint(WaypointDTO dto, String tripId, Long wayId) {
+        Waypoint entity = getWaypointEntityAndCheckOwnership(wayId);
         return Optional.ofNullable(dto)
                 .map(waypoint -> waypointMapper.updateEntity(waypoint, entity))
-                .map(waypoint -> { waypoint.setWaypointId(id); return waypoint; })
+                .map(waypoint -> { waypoint.setWaypointId(wayId); return waypoint; })
                 .map(waypointRepository::save)
                 .map(waypointMapper::toDto)
+                .map(waypointDTO -> {waypointDTO.setTripId(tripId); return waypointDTO;})
                 .orElseThrow(BadRequestException::new);
     }
 
-    public void deleteWaypoint(Long id) {
-        getWaypointEntityAndCheckOwnership(id);
-        waypointRepository.delete(id);
+    public void deleteWaypoint(Long wayId) {
+        getWaypointEntityAndCheckOwnership(wayId);
+        waypointRepository.delete(wayId);
     }
 
     private Waypoint checkWaypointOwner(Waypoint waypoint) {

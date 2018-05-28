@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import pl.mytrip.trip.DTOs.BasicWaypointDTO;
 import pl.mytrip.trip.DTOs.WaypointDTO;
 import pl.mytrip.trip.Services.WaypointService;
 
@@ -23,7 +22,7 @@ public class WaypointController {
 
     @RequestMapping(value = "/{tripId}/waypoints/{wayId}", method = RequestMethod.PUT)
     WaypointDTO updateWaypoint(@RequestBody WaypointDTO dto, @PathVariable String tripId, @PathVariable Long wayId) {
-        return waypointService.updateWaypoint(dto, wayId);
+        return waypointService.updateWaypoint(dto, tripId, wayId);
     }
 
     @RequestMapping(value = "/{tripId}/waypoints/{wayId}", method = RequestMethod.DELETE)
