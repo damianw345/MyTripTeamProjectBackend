@@ -46,7 +46,8 @@ public class Trip {
     @Getter
     private String presentation;
 
-    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
+//    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "trip", cascade = {CascadeType.DETACH, CascadeType.REMOVE, CascadeType.REFRESH})
     @Getter
     private Set<Waypoint> points;
 

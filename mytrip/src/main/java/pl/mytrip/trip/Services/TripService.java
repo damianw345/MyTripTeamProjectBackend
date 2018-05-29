@@ -49,15 +49,16 @@ public class TripService {
         return Optional.ofNullable(dto)
                 .map(tripMapper::toEntity)
                 .map(this::updateTripOwner)
-                .map(tripRepository::save)
-                .map(this::updateTripWaypoints)
+//                .map(tripRepository::save)
+                .map(tripRepository::saveTrip)
+//                .map(this::updateTripWaypoints)
                 .map(tripMapper::toDto)
                 .orElseThrow(BadRequestException::new);
     }
 
     @Transactional
-    public TripDTO updateTrip(TripDTO dto, String id) {
-        Trip entity = Optional.ofNullable(tripRepository.findOne(id))
+    public TripDTO updateTrip(TripDTO dto, String tripId) {
+        Trip entity = Optional.ofNullable(tripRepository.findOne(tripId))
                 .map(this::checkTripOwner)
                 .orElseThrow(NotFoundException::new);
         if(Objects.nonNull(dto.getWaypoints())){

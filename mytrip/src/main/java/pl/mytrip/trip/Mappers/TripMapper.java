@@ -44,6 +44,7 @@ public interface TripMapper {
 
     @Mapping(target = "photos", ignore = true)
     @Mapping(target = "videos", ignore = true)
+    @Mapping(source = "entity.trip.tripId", target = "tripId")
     WaypointDTO toDto(Waypoint entity);
 
     BasicTripDTO toBasicDto(Trip entity);
