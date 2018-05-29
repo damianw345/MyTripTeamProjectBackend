@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.mytrip.trip.Services.PhotoService;
-import pl.mytrip.trip.dto.PhotoDTO;
+import pl.mytrip.trip.DTOs.PhotoDTO;
 
 import java.io.IOException;
 

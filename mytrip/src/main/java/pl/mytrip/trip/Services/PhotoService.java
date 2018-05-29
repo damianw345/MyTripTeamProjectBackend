@@ -9,9 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.mytrip.trip.Model.Photo;
-import pl.mytrip.trip.Model.PhotoRepository;
+import pl.mytrip.trip.Repositories.PhotoRepository;
 import pl.mytrip.trip.StorageConnector;
-import pl.mytrip.trip.dto.PhotoDTO;
+import pl.mytrip.trip.DTOs.PhotoDTO;
 
 import java.io.*;
 import java.net.HttpURLConnection;
