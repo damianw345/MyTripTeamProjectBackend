@@ -10,6 +10,8 @@ import pl.mytrip.trip.Services.TripService;
 import pl.mytrip.trip.DTOs.BasicTripDTO;
 import pl.mytrip.trip.DTOs.TripDTO;
 
+import java.util.Date;
+
 @RestController
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @RequestMapping("/api/trips")
@@ -25,6 +27,7 @@ public class TripController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     TripDTO addTrip(@RequestBody TripDTO dto) {
+        System.out.println(new Date().toString());
         return tripService.addTrip(dto);
     }
 

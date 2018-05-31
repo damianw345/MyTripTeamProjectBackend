@@ -11,17 +11,17 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class StorageConnector {
 
-    public CloudBlobContainer getStorageContainer() {
+    public CloudBlobContainer getStorageContainer(String name) {
         String storageConnectionString =
                 "DefaultEndpointsProtocol=https;" +
-                        "AccountName=kmdapistorage;" +
-                        "AccountKey=7h2rlrAZpCXgWoma6OaUtL5PzXAhyAh/SxCN72ROE7tUn1AqrOgD3oMy+Ye0xtc1eXWahhQV8YgFo3lWKNuFdQ==";
+                        "AccountName=tripsbackendstorage;" +
+                        "AccountKey=pugJGg9FMiZ8YRbn/UBrCAS7G5DAeJZVulEyeiV3f+MwfKBKg+Sobk+gEuYxDY9C+afRWeAsDEPcPRuQhaSV5g==";
 
         try {
             CloudStorageAccount storageAccount = CloudStorageAccount.parse(storageConnectionString);
             CloudBlobClient blobClient = storageAccount.createCloudBlobClient();
 
-            return blobClient.getContainerReference("mytrip");
+            return blobClient.getContainerReference(name);
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
             return null;

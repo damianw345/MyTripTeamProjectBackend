@@ -1,8 +1,12 @@
 package pl.mytrip.trip.Services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.mytrip.trip.DTOs.ThumbnailJobDTO;
 import pl.mytrip.trip.Model.Photo;
 import pl.mytrip.trip.Model.Trip;
 import pl.mytrip.trip.Repositories.PhotoRepository;
@@ -18,17 +22,22 @@ import java.net.URL;
 import java.util.Base64;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class QueueJobService {
 
     private final TripRepository tripRepository;
-//    private final TripMapperImpl tripMapper;
     private final PhotoRepository photoRepository;
 
-    public String addThumbnailJob(String photoUrl) {
+    public String addThumbnailJob(String photoUrl) throws JsonProcessingException {
+        log.info("QueueJobService::addThumbnailJob");
+        ThumbnailJobDTO dto = new ThumbnailJobDTO();
+        dto.setCallbackUrl("/{tripId}/photos/{photoId}/thumbnail");
+        dto.setFullImageStorageUrl(photoUrl);
+        System.out.println(dto);
         return executePost("https://mediaservice-trzye.azurewebsites.net/mediaService/addThumbnailJob",
-                "{\"fullImageStorageUrl\": " + photoUrl + "}");
+                new ObjectMapper().writeValueAsString(dto));
     }
 
     public String addPosterJob(String tripId) {

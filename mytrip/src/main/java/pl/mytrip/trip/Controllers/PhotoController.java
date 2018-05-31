@@ -19,11 +19,11 @@ public class PhotoController {
     private final PhotoService photoService;
 
     @RequestMapping(value = "/{tripId}/photos", method = RequestMethod.POST, consumes = "multipart/form-data")
-    String addPhoto(@PathVariable Long tripId, @RequestParam String photoInfo, @RequestParam MultipartFile photo) {
+    String addPhoto(@PathVariable Long tripId, @RequestParam MultipartFile photo) {
         try {
             byte[] myPhoto = photo.getBytes();
-            PhotoDTO photoDTO  = new ObjectMapper().readValue(photoInfo, PhotoDTO.class);
-            return photoService.addPhoto(tripId, photoDTO, myPhoto);
+//            PhotoDTO photoDTO  = new ObjectMapper().readValue(photoInfo, PhotoDTO.class);
+            return photoService.addPhoto(tripId, myPhoto);
         } catch (IOException e) {
             e.printStackTrace();
             return "failed";
@@ -37,7 +37,8 @@ public class PhotoController {
 
     @RequestMapping(value = "/{tripId}/photos/{photoId}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void deletePhoto(@PathVariable Long tripId, @PathVariable Long photoId) {
+    @ResponseBody void deletePhoto(@PathVariable Long tripId, @PathVariable Long photoId) {
+        System.out.println("try to delete photo");
         photoService.deletePhoto(tripId, photoId);
     }
 }
