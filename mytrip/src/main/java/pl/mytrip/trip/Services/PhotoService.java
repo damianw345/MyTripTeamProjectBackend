@@ -9,22 +9,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.mytrip.trip.DTOs.PhotoDTO;
 import pl.mytrip.trip.DTOs.PhotoInfoDTO;
 import pl.mytrip.trip.Mappers.PhotoMapper;
 import pl.mytrip.trip.Model.Photo;
-import pl.mytrip.trip.Model.Trip;
 import pl.mytrip.trip.Model.Waypoint;
 import pl.mytrip.trip.Repositories.PhotoRepository;
 import pl.mytrip.trip.Repositories.TripRepository;
 import pl.mytrip.trip.Repositories.WaypointRepository;
 import pl.mytrip.trip.StorageConnector;
 
-import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Date;
 import java.util.Optional;
 
 @Slf4j
@@ -71,20 +67,20 @@ public class PhotoService {
         }
     }
 
-    public String updatePhoto(PhotoDTO dto, String tripId, Long photoId) {
-        CloudBlobContainer cloudBlobContainer = storageConnector.getStorageContainer("photos");
-        CloudBlob blob;
-
-        try {
-            blob = cloudBlobContainer.getBlockBlobReference("photo"
-                    + tripId + "_"
-                    + photoId);
-            return blob.getUri().toString();
-        } catch (URISyntaxException | StorageException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+//    public String updatePhoto(PhotoDTO dto, String tripId, Long photoId) {
+//        CloudBlobContainer cloudBlobContainer = storageConnector.getStorageContainer("photos");
+//        CloudBlob blob;
+//
+//        try {
+//            blob = cloudBlobContainer.getBlockBlobReference("photo"
+//                    + tripId + "_"
+//                    + photoId);
+//            return blob.getUri().toString();
+//        } catch (URISyntaxException | StorageException e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
 
     public void deletePhoto(String tripId, Long photoId) {
         log.info("PhotoService::deletePhoto");

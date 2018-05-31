@@ -8,9 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import pl.mytrip.trip.DTOs.PhotoInfoDTO;
 import pl.mytrip.trip.Services.PhotoService;
-import pl.mytrip.trip.DTOs.PhotoDTO;
 
-import java.io.DataInput;
 import java.io.IOException;
 
 @RestController
@@ -32,10 +30,10 @@ public class PhotoController {
         }
     }
 
-    @RequestMapping(value = "/{tripId}/photos/{photoId}", method = RequestMethod.PUT)
-    String updatePhoto(@RequestBody PhotoDTO dto, @PathVariable String tripId, @PathVariable Long photoId) {
-        return photoService.updatePhoto(dto, tripId, photoId);
-    }
+//    @RequestMapping(value = "/{tripId}/photos/{photoId}", method = RequestMethod.PUT)
+//    String updatePhoto(@RequestBody PhotoDTO dto, @PathVariable String tripId, @PathVariable Long photoId) {
+//        return photoService.updatePhoto(dto, tripId, photoId);
+//    }
 
     @RequestMapping(value = "/{tripId}/photos/{photoId}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)

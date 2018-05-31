@@ -7,12 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.mytrip.trip.DTOs.Jobs.PosterJobDTO;
-import pl.mytrip.trip.DTOs.Jobs.VideoPresentationDTO;
 import pl.mytrip.trip.DTOs.Jobs.ThumbnailJobDTO;
-import pl.mytrip.trip.Mappers.TripMapper;
-import pl.mytrip.trip.Model.Photo;
+import pl.mytrip.trip.DTOs.Jobs.VideoPresentationDTO;
 import pl.mytrip.trip.Model.Trip;
-import pl.mytrip.trip.Model.Waypoint;
 import pl.mytrip.trip.Repositories.TripRepository;
 
 import javax.ws.rs.NotFoundException;
@@ -22,7 +19,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.*;
+import java.util.Base64;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -30,7 +30,6 @@ import java.util.*;
 public class QueueJobService {
 
     private final TripRepository tripRepository;
-    private final TripMapper tripMapper;
     private static final String JOB_API = "https://tripsbackendprocessingapi.azurewebsites.net";
 
     public String addThumbnailJob(String photoUrl, String tripId, Long photoId) throws JsonProcessingException {
@@ -45,11 +44,11 @@ public class QueueJobService {
 
     public String addPosterJob(String tripId) throws JsonProcessingException {
         Set<String> photoUrls = new HashSet<>();
-//        tripRepository.findOne(tripId).getPoints().forEach(waypoint -> waypoint.getPhotos().forEach(photo -> {
-//            System.out.println("photo: " + photo.getUrl());
-//            photoUrls.add(photo.getUrl());
-//        }));
-//        System.out.println("Photos size: " + photoUrls.size());
+
+        tripRepository.findOne(tripId).getPoints().forEach(waypoint -> waypoint.getPhotos().forEach(photo -> {
+            photoUrls.add(photo.getUrl());
+        }));
+
         PosterJobDTO dto = new PosterJobDTO();
         dto.setPhotos(photoUrls);
         dto.setCallbackUrl("/" + tripId + "/posterCreated");
@@ -60,23 +59,11 @@ public class QueueJobService {
 
     public String addVideoPresentationJob(String tripId) throws JsonProcessingException {
         Set<String> photoUrls = new HashSet<>();
-        Set<Waypoint> waypoints = tripRepository.findOne(tripId).getPoints();
-        System.out.println(waypoints);
-        System.out.println("=== waypoints: " + waypoints.size());
-        Set<Photo> photos = new HashSet<>();
-//        for (Waypoint waypoint: waypoints) {
-//            System.out.println("waypoint id: " + waypoint.getWaypointId());
-//        }
-//        for(Photo photo : photos){
-//            System.out.println("url: " + photo.getUrl());
-//            photoUrls.add(photo.getUrl());
-//        }
-//                .forEach(waypoint -> waypoint.getPhotos().forEach(photo -> {
-//            System.out.println("photo: " + photo.getUrl());
-//            photoUrls.add(photo.getUrl());
-//        }));
 
-        System.out.println("Photos size: " + photoUrls.size());
+        tripRepository.findOne(tripId).getPoints().forEach(waypoint -> waypoint.getPhotos().forEach(photo -> {
+            photoUrls.add(photo.getUrl());
+        }));
+
         VideoPresentationDTO dto = new VideoPresentationDTO();
         dto.setPhotos(photoUrls);
         dto.setCallbackUrl("/" + tripId + "/presentationCreated");
@@ -137,13 +124,6 @@ public class QueueJobService {
         trip.setPresentation(videoPresentationUrl);
         tripRepository.save(trip);
     }
-
-//    public void addThumbnailUrl(Long photoId, String thumbnailUrl) {
-//        Photo photo = Optional.ofNullable(photoRepository.findOne(photoId))
-//                .orElseThrow(NotFoundException::new);
-//        photo.setThumbnailUrl(thumbnailUrl);
-//        photoRepository.save(photo);
-//    }
 
     public String getPoster(String tripId) {
         return Optional.ofNullable(tripRepository.findOne(tripId))
