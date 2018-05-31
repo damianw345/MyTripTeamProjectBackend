@@ -11,15 +11,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.mytrip.trip.DTOs.PhotoDTO;
 import pl.mytrip.trip.DTOs.PhotoInfoDTO;
+import pl.mytrip.trip.Mappers.PhotoMapper;
 import pl.mytrip.trip.Model.Photo;
 import pl.mytrip.trip.Model.Trip;
+import pl.mytrip.trip.Model.Waypoint;
 import pl.mytrip.trip.Repositories.PhotoRepository;
 import pl.mytrip.trip.Repositories.TripRepository;
+import pl.mytrip.trip.Repositories.WaypointRepository;
 import pl.mytrip.trip.StorageConnector;
 
+import javax.ws.rs.BadRequestException;
+import javax.ws.rs.NotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Date;
+import java.util.Optional;
 
 @Slf4j
 @Data
@@ -31,26 +37,27 @@ public class PhotoService {
     private final PhotoRepository photoRepository;
     private final QueueJobService queueJobService;
     private final TripRepository tripRepository;
+    private final WaypointRepository waypointRepository;
+    private final PhotoMapper photoMapper;
 
     public String addPhoto(String tripId, byte[] photoBytes, PhotoInfoDTO photoInfoDTO) {
         CloudBlobContainer cloudBlobContainer = storageConnector.getStorageContainer("photos");
         CloudBlob blob;
         try {
-            Photo photo = new Photo();
-            photo.setDate(new Date());
-            photo.setWaypointId(photoInfoDTO.getWaypointId());
-            photo.setUrl("url");
-            photoRepository.save(photo);
+            Waypoint waypoint = Optional.ofNullable(waypointRepository.findOne(photoInfoDTO.getWaypointId()))
+                    .orElseThrow(NotFoundException::new);
+            Photo photo = Optional.ofNullable(photoInfoDTO)
+                    .map(photoMapper::toEntity)
+                    .map(entity -> { entity.setWaypoint(waypoint); return entity; })
+                    .map(photoRepository::save).orElseThrow(NotFoundException::new);
 
             blob = cloudBlobContainer.getBlockBlobReference("photo"
                     + tripId + "_"
                     + photo.getPhotoId());
-
             blob.uploadFromByteArray(photoBytes, 0, photoBytes.length);
-            String thumbnailUrl = queueJobService.addThumbnailJob(blob.getUri().toString(), tripId, photo.getPhotoId());
 
             photo.setUrl(blob.getUri().toString());
-            photo.setThumbnailUrl(thumbnailUrl);
+            photo.setThumbnailUrl(queueJobService.addThumbnailJob(blob.getUri().toString(), tripId, photo.getPhotoId()));
             photoRepository.save(photo);
 
             for (ListBlobItem blobItem : cloudBlobContainer.listBlobs()) {

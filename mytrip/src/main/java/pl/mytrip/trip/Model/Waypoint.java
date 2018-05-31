@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,4 +30,7 @@ public class Waypoint {
     @ManyToOne
     @JoinColumn(name = "trip_id")
     private Trip trip;
+
+    @OneToMany(mappedBy = "waypoint", cascade = CascadeType.ALL)
+    private Set<Photo> photos;
 }

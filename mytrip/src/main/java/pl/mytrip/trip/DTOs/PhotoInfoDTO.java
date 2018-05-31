@@ -9,7 +9,5 @@ public class PhotoInfoDTO {
 
     private Long waypointId;
     private Date date;
-    private String url;
-    private String thumbnailUrl;
 
 }

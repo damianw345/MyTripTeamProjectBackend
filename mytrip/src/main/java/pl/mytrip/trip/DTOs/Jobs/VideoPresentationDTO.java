@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Set;
 
 @Data
-public class PosterJobDTO {
+public class VideoPresentationDTO {
 
     private Set<String> photos;
     private String callbackUrl;

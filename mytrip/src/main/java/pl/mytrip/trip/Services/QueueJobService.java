@@ -7,12 +7,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.mytrip.trip.DTOs.Jobs.PosterJobDTO;
-import pl.mytrip.trip.DTOs.Jobs.SimpleVideoPresentationDTO;
+import pl.mytrip.trip.DTOs.Jobs.VideoPresentationDTO;
 import pl.mytrip.trip.DTOs.Jobs.ThumbnailJobDTO;
 import pl.mytrip.trip.Mappers.TripMapper;
 import pl.mytrip.trip.Model.Photo;
 import pl.mytrip.trip.Model.Trip;
-import pl.mytrip.trip.Repositories.PhotoRepository;
+import pl.mytrip.trip.Model.Waypoint;
 import pl.mytrip.trip.Repositories.TripRepository;
 
 import javax.ws.rs.NotFoundException;
@@ -22,10 +22,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -33,8 +30,8 @@ import java.util.Optional;
 public class QueueJobService {
 
     private final TripRepository tripRepository;
-    private final PhotoRepository photoRepository;
     private final TripMapper tripMapper;
+    private static final String JOB_API = "https://tripsbackendprocessingapi.azurewebsites.net";
 
     public String addThumbnailJob(String photoUrl, String tripId, Long photoId) throws JsonProcessingException {
         log.info("QueueJobService::addThumbnailJob");
@@ -42,25 +39,49 @@ public class QueueJobService {
         dto.setCallbackUrl("/" + tripId + "/photos/" + photoId + "/thumbnail");
         dto.setFullImageStorageUrl(photoUrl);
 
-        return executePost("https://mediaservice-trzye.azurewebsites.net/mediaService/addThumbnailJob",
+        return executePost(JOB_API + "/mediaService/addThumbnailJob",
                 new ObjectMapper().writeValueAsString(dto));
     }
 
     public String addPosterJob(String tripId) throws JsonProcessingException {
+        Set<String> photoUrls = new HashSet<>();
+//        tripRepository.findOne(tripId).getPoints().forEach(waypoint -> waypoint.getPhotos().forEach(photo -> {
+//            System.out.println("photo: " + photo.getUrl());
+//            photoUrls.add(photo.getUrl());
+//        }));
+//        System.out.println("Photos size: " + photoUrls.size());
         PosterJobDTO dto = new PosterJobDTO();
-        dto.setTripDTO(tripMapper.toDto(tripRepository.findOne(tripId)));
+        dto.setPhotos(photoUrls);
         dto.setCallbackUrl("/" + tripId + "/posterCreated");
 
-        return executePost("https://mediaservice-trzye.azurewebsites.net/mediaService/addPosterJob",
+        return executePost(JOB_API + "/mediaService/addPosterJob",
                 new ObjectMapper().writeValueAsString(dto));
     }
 
     public String addVideoPresentationJob(String tripId) throws JsonProcessingException {
-        SimpleVideoPresentationDTO dto = new SimpleVideoPresentationDTO();
-        dto.setPhotos(new ArrayList<>(Arrays.asList("1","2","3","4","5","6","7")));
+        Set<String> photoUrls = new HashSet<>();
+        Set<Waypoint> waypoints = tripRepository.findOne(tripId).getPoints();
+        System.out.println(waypoints);
+        System.out.println("=== waypoints: " + waypoints.size());
+        Set<Photo> photos = new HashSet<>();
+//        for (Waypoint waypoint: waypoints) {
+//            System.out.println("waypoint id: " + waypoint.getWaypointId());
+//        }
+//        for(Photo photo : photos){
+//            System.out.println("url: " + photo.getUrl());
+//            photoUrls.add(photo.getUrl());
+//        }
+//                .forEach(waypoint -> waypoint.getPhotos().forEach(photo -> {
+//            System.out.println("photo: " + photo.getUrl());
+//            photoUrls.add(photo.getUrl());
+//        }));
+
+        System.out.println("Photos size: " + photoUrls.size());
+        VideoPresentationDTO dto = new VideoPresentationDTO();
+        dto.setPhotos(photoUrls);
         dto.setCallbackUrl("/" + tripId + "/presentationCreated");
 
-        return executePost("https://mediaservice-trzye.azurewebsites.net/mediaService/addVideoPresentationJob",
+        return executePost(JOB_API + "/mediaService/addVideoPresentationJob",
                 new ObjectMapper().writeValueAsString(dto));
     }
 
@@ -68,7 +89,7 @@ public class QueueJobService {
         HttpURLConnection connection;
 
         try {
-            String encoding = Base64.getEncoder().encodeToString(("serviceapp:serviceapp@123").getBytes());
+            String encoding = Base64.getEncoder().encodeToString(("serviceapp:e&GbE]5as-k~hspC").getBytes());
             URL url = new URL(targetURL);
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");

@@ -18,9 +18,6 @@ public class Photo {
     private Long photoId;
 
     @Column(nullable = false)
-    private Long waypointId;
-
-    @Column(nullable = false)
     private Date date;
 
     @Column(nullable = false)
@@ -28,5 +25,9 @@ public class Photo {
 
     @Column
     private String thumbnailUrl;
+
+    @ManyToOne
+    @JoinColumn(name = "waypoint_id")
+    private Waypoint waypoint;
 
 }

@@ -16,21 +16,23 @@ public class JobController {
 
     @RequestMapping(value = "/{tripId}/poster", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public void createPoster(@PathVariable String tripId) {
+    public String createPoster(@PathVariable String tripId) {
         try {
-            queueJobService.addPosterJob(tripId);
+            return queueJobService.addPosterJob(tripId);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
+            return null;
         }
     }
 
     @RequestMapping(value = "/{tripId}/presentation", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public void createVideoPresentation(@PathVariable String tripId) {
+    public String createVideoPresentation(@PathVariable String tripId) {
         try {
-            queueJobService.addVideoPresentationJob(tripId);
+            return queueJobService.addVideoPresentationJob(tripId);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
+            return null;
         }
     }
 
