@@ -10,8 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.mytrip.trip.DTOs.PhotoDTO;
+import pl.mytrip.trip.DTOs.PhotoInfoDTO;
 import pl.mytrip.trip.Model.Photo;
+import pl.mytrip.trip.Model.Trip;
 import pl.mytrip.trip.Repositories.PhotoRepository;
+import pl.mytrip.trip.Repositories.TripRepository;
 import pl.mytrip.trip.StorageConnector;
 
 import java.io.IOException;
@@ -27,27 +30,24 @@ public class PhotoService {
     private final StorageConnector storageConnector;
     private final PhotoRepository photoRepository;
     private final QueueJobService queueJobService;
+    private final TripRepository tripRepository;
 
-    public String addPhoto(Long tripId, byte[] photoBytes) {
+    public String addPhoto(String tripId, byte[] photoBytes, PhotoInfoDTO photoInfoDTO) {
         CloudBlobContainer cloudBlobContainer = storageConnector.getStorageContainer("photos");
         CloudBlob blob;
         try {
-            log.info("Add photo to DB.");
-
             Photo photo = new Photo();
-            photo.setPhotoId((long) 1);
             photo.setDate(new Date());
-            photo.setWaypointId((long) 1);
+            photo.setWaypointId(photoInfoDTO.getWaypointId());
             photo.setUrl("url");
             photoRepository.save(photo);
 
             blob = cloudBlobContainer.getBlockBlobReference("photo"
-                    + tripId.toString() + "_"
+                    + tripId + "_"
                     + photo.getPhotoId());
 
-            log.info("Save photo to storage.");
             blob.uploadFromByteArray(photoBytes, 0, photoBytes.length);
-            String thumbnailUrl = queueJobService.addThumbnailJob(blob.getUri().toString());
+            String thumbnailUrl = queueJobService.addThumbnailJob(blob.getUri().toString(), tripId, photo.getPhotoId());
 
             photo.setUrl(blob.getUri().toString());
             photo.setThumbnailUrl(thumbnailUrl);
@@ -64,13 +64,13 @@ public class PhotoService {
         }
     }
 
-    public String updatePhoto(PhotoDTO dto, Long tripId, Long photoId) {
+    public String updatePhoto(PhotoDTO dto, String tripId, Long photoId) {
         CloudBlobContainer cloudBlobContainer = storageConnector.getStorageContainer("photos");
         CloudBlob blob;
 
         try {
             blob = cloudBlobContainer.getBlockBlobReference("photo"
-                    + tripId.toString() + "_"
+                    + tripId + "_"
                     + photoId);
             return blob.getUri().toString();
         } catch (URISyntaxException | StorageException e) {
@@ -79,7 +79,7 @@ public class PhotoService {
         }
     }
 
-    public void deletePhoto(Long tripId, Long photoId) {
+    public void deletePhoto(String tripId, Long photoId) {
         log.info("PhotoService::deletePhoto");
         CloudBlobContainer cloudBlobContainer = storageConnector.getStorageContainer("photos");
         CloudBlob blob;

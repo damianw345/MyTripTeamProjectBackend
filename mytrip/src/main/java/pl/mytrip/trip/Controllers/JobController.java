@@ -1,5 +1,6 @@
 package pl.mytrip.trip.Controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,13 +17,21 @@ public class JobController {
     @RequestMapping(value = "/{tripId}/poster", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public void createPoster(@PathVariable String tripId) {
-        queueJobService.addPosterJob(tripId);
+        try {
+            queueJobService.addPosterJob(tripId);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 
     @RequestMapping(value = "/{tripId}/presentation", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public void createVideoPresentation(@PathVariable String tripId) {
-        queueJobService.addVideoPresentationJob(tripId);
+        try {
+            queueJobService.addVideoPresentationJob(tripId);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 
     @RequestMapping(value = "/{tripId}/poster", method = RequestMethod.GET)
@@ -49,10 +58,10 @@ public class JobController {
         queueJobService.addVideoPresentationUrl(tripId, videoPresentationUrl);
     }
 
-    @RequestMapping(value = "/{tripId}/photos/{photoId}/thumbnail", method = RequestMethod.POST)
-    @ResponseStatus(HttpStatus.OK)
-    public void thumbnailCreated(@PathVariable String tripId, @PathVariable Long photoId, @RequestParam String thumbnailUrl) {
-        queueJobService.addThumbnailUrl(photoId, thumbnailUrl);
-    }
+//    @RequestMapping(value = "/{tripId}/photos/{photoId}/thumbnail", method = RequestMethod.POST)
+//    @ResponseStatus(HttpStatus.OK)
+//    public void thumbnailCreated(@PathVariable String tripId, @PathVariable Long photoId, @RequestParam String thumbnailUrl) {
+//        queueJobService.addThumbnailUrl(photoId, thumbnailUrl);
+//    }
 
 }

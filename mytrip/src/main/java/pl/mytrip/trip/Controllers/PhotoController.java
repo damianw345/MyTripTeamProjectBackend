@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import pl.mytrip.trip.DTOs.PhotoInfoDTO;
 import pl.mytrip.trip.Services.PhotoService;
 import pl.mytrip.trip.DTOs.PhotoDTO;
 
+import java.io.DataInput;
 import java.io.IOException;
 
 @RestController
@@ -19,11 +21,11 @@ public class PhotoController {
     private final PhotoService photoService;
 
     @RequestMapping(value = "/{tripId}/photos", method = RequestMethod.POST, consumes = "multipart/form-data")
-    String addPhoto(@PathVariable Long tripId, @RequestParam MultipartFile photo) {
+    String addPhoto(@PathVariable String tripId, @RequestParam String photoInfo, @RequestParam MultipartFile photo) {
         try {
             byte[] myPhoto = photo.getBytes();
-//            PhotoDTO photoDTO  = new ObjectMapper().readValue(photoInfo, PhotoDTO.class);
-            return photoService.addPhoto(tripId, myPhoto);
+            PhotoInfoDTO dto  = new ObjectMapper().readValue(photoInfo, PhotoInfoDTO.class);
+            return photoService.addPhoto(tripId, myPhoto, dto);
         } catch (IOException e) {
             e.printStackTrace();
             return "failed";
@@ -31,13 +33,13 @@ public class PhotoController {
     }
 
     @RequestMapping(value = "/{tripId}/photos/{photoId}", method = RequestMethod.PUT)
-    String updatePhoto(@RequestBody PhotoDTO dto, @PathVariable Long tripId, @PathVariable Long photoId) {
+    String updatePhoto(@RequestBody PhotoDTO dto, @PathVariable String tripId, @PathVariable Long photoId) {
         return photoService.updatePhoto(dto, tripId, photoId);
     }
 
     @RequestMapping(value = "/{tripId}/photos/{photoId}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ResponseBody void deletePhoto(@PathVariable Long tripId, @PathVariable Long photoId) {
+    @ResponseBody void deletePhoto(@PathVariable String tripId, @PathVariable Long photoId) {
         System.out.println("try to delete photo");
         photoService.deletePhoto(tripId, photoId);
     }

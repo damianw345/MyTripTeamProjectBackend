@@ -11,4 +11,5 @@ public class PhotoInfoDTO {
     private Date date;
     private String url;
     private String thumbnailUrl;
+
 }

@@ -1,4 +1,4 @@
-package pl.mytrip.trip.DTOs;
+package pl.mytrip.trip.DTOs.Jobs;
 
 import lombok.Data;
 

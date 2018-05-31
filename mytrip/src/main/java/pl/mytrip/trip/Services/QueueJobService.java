@@ -6,7 +6,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.mytrip.trip.DTOs.ThumbnailJobDTO;
+import pl.mytrip.trip.DTOs.Jobs.PosterJobDTO;
+import pl.mytrip.trip.DTOs.Jobs.SimpleVideoPresentationDTO;
+import pl.mytrip.trip.DTOs.Jobs.ThumbnailJobDTO;
+import pl.mytrip.trip.Mappers.TripMapper;
 import pl.mytrip.trip.Model.Photo;
 import pl.mytrip.trip.Model.Trip;
 import pl.mytrip.trip.Repositories.PhotoRepository;
@@ -19,6 +22,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Optional;
 
@@ -29,25 +34,34 @@ public class QueueJobService {
 
     private final TripRepository tripRepository;
     private final PhotoRepository photoRepository;
+    private final TripMapper tripMapper;
 
-    public String addThumbnailJob(String photoUrl) throws JsonProcessingException {
+    public String addThumbnailJob(String photoUrl, String tripId, Long photoId) throws JsonProcessingException {
         log.info("QueueJobService::addThumbnailJob");
         ThumbnailJobDTO dto = new ThumbnailJobDTO();
-        dto.setCallbackUrl("/{tripId}/photos/{photoId}/thumbnail");
+        dto.setCallbackUrl("/" + tripId + "/photos/" + photoId + "/thumbnail");
         dto.setFullImageStorageUrl(photoUrl);
-        System.out.println(dto);
+
         return executePost("https://mediaservice-trzye.azurewebsites.net/mediaService/addThumbnailJob",
                 new ObjectMapper().writeValueAsString(dto));
     }
 
-    public String addPosterJob(String tripId) {
+    public String addPosterJob(String tripId) throws JsonProcessingException {
+        PosterJobDTO dto = new PosterJobDTO();
+        dto.setTripDTO(tripMapper.toDto(tripRepository.findOne(tripId)));
+        dto.setCallbackUrl("/" + tripId + "/posterCreated");
+
         return executePost("https://mediaservice-trzye.azurewebsites.net/mediaService/addPosterJob",
-                "{\"fullImageStorageUrl\": \"\"}");
+                new ObjectMapper().writeValueAsString(dto));
     }
 
-    public String addVideoPresentationJob(String tripId) {
+    public String addVideoPresentationJob(String tripId) throws JsonProcessingException {
+        SimpleVideoPresentationDTO dto = new SimpleVideoPresentationDTO();
+        dto.setPhotos(new ArrayList<>(Arrays.asList("1","2","3","4","5","6","7")));
+        dto.setCallbackUrl("/" + tripId + "/presentationCreated");
+
         return executePost("https://mediaservice-trzye.azurewebsites.net/mediaService/addVideoPresentationJob",
-                "{\"fullImageStorageUrl\": \"\"}");
+                new ObjectMapper().writeValueAsString(dto));
     }
 
     private static String executePost(String targetURL, String urlParameters) {
@@ -58,15 +72,12 @@ public class QueueJobService {
             URL url = new URL(targetURL);
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
+
             connection.setRequestProperty("Content-Type",
                     "application/json");
             connection.setRequestProperty("Authorization", "Basic " + encoding);
-
             connection.setRequestProperty("Content-Length",
                     Integer.toString(urlParameters.getBytes().length));
-//            connection.setRequestProperty("Content-Language", "en-US");
-
-//            connection.setUseCaches(false);
             connection.setDoOutput(true);
 
             //Send request
@@ -106,12 +117,12 @@ public class QueueJobService {
         tripRepository.save(trip);
     }
 
-    public void addThumbnailUrl(Long photoId, String thumbnailUrl) {
-        Photo photo = Optional.ofNullable(photoRepository.findOne(photoId))
-                .orElseThrow(NotFoundException::new);
-        photo.setThumbnailUrl(thumbnailUrl);
-        photoRepository.save(photo);
-    }
+//    public void addThumbnailUrl(Long photoId, String thumbnailUrl) {
+//        Photo photo = Optional.ofNullable(photoRepository.findOne(photoId))
+//                .orElseThrow(NotFoundException::new);
+//        photo.setThumbnailUrl(thumbnailUrl);
+//        photoRepository.save(photo);
+//    }
 
     public String getPoster(String tripId) {
         return Optional.ofNullable(tripRepository.findOne(tripId))
