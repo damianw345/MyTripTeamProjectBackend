@@ -10,6 +10,7 @@ import pl.mytrip.trip.DTOs.BasicTripDTO;
 import pl.mytrip.trip.DTOs.TripDTO;
 import pl.mytrip.trip.DTOs.WaypointDTO;
 import pl.mytrip.trip.Mappers.TripMapper;
+import pl.mytrip.trip.Mappers.WaypointMapper;
 import pl.mytrip.trip.Model.Trip;
 import pl.mytrip.trip.Repositories.TripRepository;
 import pl.mytrip.trip.Repositories.WaypointRepository;
@@ -60,10 +61,8 @@ public class TripService {
         Trip entity = Optional.ofNullable(tripRepository.findOne(id))
                 .map(this::checkTripOwner)
                 .orElseThrow(NotFoundException::new);
-        if(Objects.nonNull(dto.getWaypoints())){
-            persistTripWaypoints(dto);
-        }
         return Optional.of(dto)
+                .map(this::persistTripWaypoints)
                 .map(trip -> tripMapper.updateEntity(trip, entity))
                 .map(tripRepository::save)
                 .map(tripMapper::toDto)
@@ -97,14 +96,12 @@ public class TripService {
         return trip;
     }
 
-    private void persistTripWaypoints(TripDTO dto) {
-        if (dto == null) {
-            throw new BadRequestException();
-        }
+    private TripDTO persistTripWaypoints(TripDTO dto) {
         for(WaypointDTO waypointDTO : dto.getWaypoints()) {
             Optional.ofNullable(waypointRepository.findOne(waypointDTO.getWaypointId()))
                     .map(waypointEntity -> tripMapper.updateEntity(waypointDTO, waypointEntity))
                     .map(waypointRepository::save);
         }
+        return dto;
     }
 }

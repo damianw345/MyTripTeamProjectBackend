@@ -1,0 +1,1 @@
+ALTER TABLE waypoint CHANGE COLUMN trip_id trip_id VARCHAR(36) NULL;

@@ -13,6 +13,6 @@ public class WaypointDTO {
     private Float longitude;
     private Float latitude;
     private Date date;
-    private List<PhotoInfoDTO> photos;
+    private List<PhotoWaypointDTO> photos;
     private List<VideoInfoDTO> videos;
 }
