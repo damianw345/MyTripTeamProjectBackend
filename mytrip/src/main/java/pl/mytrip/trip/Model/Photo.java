@@ -1,15 +1,14 @@
 package pl.mytrip.trip.Model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Setter
+@Getter
 @Entity(name = "photo")
 public class Photo {
 
@@ -18,15 +17,16 @@ public class Photo {
     private Long photoId;
 
     @Column(nullable = false)
-    private Long waypointId;
-
-    @Column(nullable = false)
     private Date date;
 
     @Column(nullable = false)
     private String url;
 
-    @Column(nullable = false)
+    @Column
     private String thumbnailUrl;
+
+    @ManyToOne
+    @JoinColumn(name = "waypoint_id")
+    private Waypoint waypoint;
 
 }

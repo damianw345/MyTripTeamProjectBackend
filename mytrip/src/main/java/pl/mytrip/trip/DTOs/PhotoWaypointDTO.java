@@ -5,9 +5,9 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class PhotoInfoDTO {
-
+public class PhotoWaypointDTO {
     private Long waypointId;
     private Date date;
-
+    private String url;
+    private String thumbnailUrl;
 }
