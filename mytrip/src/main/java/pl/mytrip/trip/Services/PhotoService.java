@@ -36,7 +36,7 @@ public class PhotoService {
     private final WaypointRepository waypointRepository;
     private final PhotoMapper photoMapper;
 
-    public String addPhoto(String tripId, byte[] photoBytes, PhotoInfoDTO photoInfoDTO) {
+    public String addPhoto(String tripId, byte[] photoBytes, PhotoInfoDTO photoInfoDTO, String extension) {
         CloudBlobContainer cloudBlobContainer = storageConnector.getStorageContainer("photos");
         CloudBlob blob;
         try {
@@ -49,16 +49,13 @@ public class PhotoService {
 
             blob = cloudBlobContainer.getBlockBlobReference("photo"
                     + tripId + "_"
-                    + photo.getPhotoId());
+                    + photo.getPhotoId() + "."
+                    + extension);
             blob.uploadFromByteArray(photoBytes, 0, photoBytes.length);
 
             photo.setUrl(blob.getUri().toString());
             photo.setThumbnailUrl(queueJobService.addThumbnailJob(blob.getUri().toString(), tripId, photo.getPhotoId()));
             photoRepository.save(photo);
-
-            for (ListBlobItem blobItem : cloudBlobContainer.listBlobs()) {
-                log.info(blobItem.getUri().toString());
-            }
 
             return blob.getUri().toString();
         } catch (URISyntaxException | StorageException | IOException e) {
@@ -87,12 +84,16 @@ public class PhotoService {
         CloudBlobContainer cloudBlobContainer = storageConnector.getStorageContainer("photos");
         CloudBlob blob;
 
+        String[] url = photoRepository.findOne(photoId).getUrl().split("[.]");
+        String extension = url[url.length - 1];
+
         photoRepository.delete(photoId);
 
         try {
             blob = cloudBlobContainer.getBlockBlobReference("photo"
-                    + tripId.toString() + "_"
-                    + photoId);
+                    + tripId + "_"
+                    + photoId + "."
+                    + extension);
 
             blob.delete();
         } catch (URISyntaxException | StorageException e) {
