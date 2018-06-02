@@ -23,10 +23,9 @@ public class PhotoController {
         try {
             String [] fileName = photo.getOriginalFilename().split("[.]");
             String extension = fileName[fileName.length - 1];
-            System.out.println("photo name:" + photo.getOriginalFilename()
-                    + "\n extension: " + fileName[fileName.length - 1]);
             byte[] myPhoto = photo.getBytes();
             PhotoInfoDTO dto  = new ObjectMapper().readValue(photoInfo, PhotoInfoDTO.class);
+            
             return photoService.addPhoto(tripId, myPhoto, dto, extension);
         } catch (IOException e) {
             e.printStackTrace();

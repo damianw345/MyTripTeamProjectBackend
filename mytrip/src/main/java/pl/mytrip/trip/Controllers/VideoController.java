@@ -25,10 +25,9 @@ public class VideoController {
         try {
             String [] fileName = video.getOriginalFilename().split("[.]");
             String extension = fileName[fileName.length - 1];
-            System.out.println("video name:" + video.getOriginalFilename()
-                    + "\n extension: " + fileName[fileName.length - 1]);
             byte[] myVideo = video.getBytes();
             VideoDTO dto  = new ObjectMapper().readValue(videoInfo, VideoDTO.class);
+
             return videoService.addVideo(tripId, myVideo, dto, extension);
         } catch (IOException e) {
             e.printStackTrace();
