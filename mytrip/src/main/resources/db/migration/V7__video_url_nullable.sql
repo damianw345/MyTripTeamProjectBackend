@@ -1,0 +1,1 @@
+ALTER TABLE mytrip.video MODIFY url VARCHAR(1000);

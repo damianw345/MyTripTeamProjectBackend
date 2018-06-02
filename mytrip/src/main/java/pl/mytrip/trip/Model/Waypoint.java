@@ -33,4 +33,7 @@ public class Waypoint {
 
     @OneToMany(mappedBy = "waypoint", cascade = CascadeType.ALL)
     private Set<Photo> photos;
+
+    @OneToMany(mappedBy = "waypoint", cascade = CascadeType.ALL)
+    private Set<Video> videos;
 }
