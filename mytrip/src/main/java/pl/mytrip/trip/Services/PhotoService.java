@@ -54,7 +54,7 @@ public class PhotoService {
             blob.uploadFromByteArray(photoBytes, 0, photoBytes.length);
 
             photo.setUrl(blob.getUri().toString());
-            photo.setThumbnailUrl(queueJobService.addThumbnailJob(blob.getUri().toString(), tripId, photo.getPhotoId()));
+            queueJobService.addThumbnailJob(blob.getUri().toString(), tripId, photo.getPhotoId());
             photoRepository.save(photo);
 
             return blob.getUri().toString();

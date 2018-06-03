@@ -60,10 +60,10 @@ public class JobController {
         queueJobService.addVideoPresentationUrl(tripId, videoPresentationUrl);
     }
 
-//    @RequestMapping(value = "/{tripId}/photos/{photoId}/thumbnail", method = RequestMethod.POST)
-//    @ResponseStatus(HttpStatus.OK)
-//    public void thumbnailCreated(@PathVariable String tripId, @PathVariable Long photoId, @RequestParam String thumbnailUrl) {
-//        queueJobService.addThumbnailUrl(photoId, thumbnailUrl);
-//    }
+    @RequestMapping(value = "/{tripId}/photos/{photoId}/thumbnail", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    public void thumbnailCreated(@PathVariable String tripId, @PathVariable Long photoId, @RequestParam String thumbnailUrl) {
+        queueJobService.addThumbnailUrl(photoId, thumbnailUrl);
+    }
 
 }

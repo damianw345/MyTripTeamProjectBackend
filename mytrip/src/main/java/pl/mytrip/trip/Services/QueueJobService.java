@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import pl.mytrip.trip.DTOs.Jobs.PosterJobDTO;
 import pl.mytrip.trip.DTOs.Jobs.ThumbnailJobDTO;
 import pl.mytrip.trip.DTOs.Jobs.VideoPresentationDTO;
+import pl.mytrip.trip.Model.Photo;
 import pl.mytrip.trip.Model.Trip;
+import pl.mytrip.trip.Repositories.PhotoRepository;
 import pl.mytrip.trip.Repositories.TripRepository;
 
 import javax.ws.rs.NotFoundException;
@@ -30,12 +32,14 @@ import java.util.Set;
 public class QueueJobService {
 
     private final TripRepository tripRepository;
+    private final PhotoRepository photoRepository;
     private static final String JOB_API = "https://tripsbackendprocessingapi.azurewebsites.net";
+    private static final String CALLBACK_URL = "http://104.41.220.226:8080/api/trips";
 
     public String addThumbnailJob(String photoUrl, String tripId, Long photoId) throws JsonProcessingException {
         log.info("QueueJobService::addThumbnailJob");
         ThumbnailJobDTO dto = new ThumbnailJobDTO();
-        dto.setCallbackUrl("/" + tripId + "/photos/" + photoId + "/thumbnail");
+        dto.setCallbackUrl(CALLBACK_URL + "/" + tripId + "/photos/" + photoId + "/thumbnail");
         dto.setFullImageStorageUrl(photoUrl);
 
         return executePost(JOB_API + "/mediaService/addThumbnailJob",
@@ -51,7 +55,7 @@ public class QueueJobService {
 
         PosterJobDTO dto = new PosterJobDTO();
         dto.setPhotos(photoUrls);
-        dto.setCallbackUrl("/" + tripId + "/posterCreated");
+        dto.setCallbackUrl(CALLBACK_URL + "/" + tripId + "/posterCreated");
 
         return executePost(JOB_API + "/mediaService/addPosterJob",
                 new ObjectMapper().writeValueAsString(dto));
@@ -66,7 +70,7 @@ public class QueueJobService {
 
         VideoPresentationDTO dto = new VideoPresentationDTO();
         dto.setPhotos(photoUrls);
-        dto.setCallbackUrl("/" + tripId + "/presentationCreated");
+        dto.setCallbackUrl(CALLBACK_URL + "/" + tripId + "/presentationCreated");
 
         return executePost(JOB_API + "/mediaService/addVideoPresentationJob",
                 new ObjectMapper().writeValueAsString(dto));
@@ -123,6 +127,13 @@ public class QueueJobService {
                 .orElseThrow(NotFoundException::new);
         trip.setPresentation(videoPresentationUrl);
         tripRepository.save(trip);
+    }
+
+    public void addThumbnailUrl(Long photoId, String thumbnailUrl) {
+        Photo photo = Optional.ofNullable(photoRepository.findOne(photoId))
+                .orElseThrow(NotFoundException::new);
+        photo.setThumbnailUrl(thumbnailUrl);
+        photoRepository.save(photo);
     }
 
     public String getPoster(String tripId) {
