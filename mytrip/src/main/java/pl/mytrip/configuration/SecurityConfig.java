@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,6 +25,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserRepository userRepository;
     private final MyTripAuthenticationEntryPoint authEntryPoint;
+
+    private static final String UUID_REGEXP = "{[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}}";
+    private static final String ID_REGEXP = "{[0-9]+}";
+    private static final String TRIP_URL = "/api/trips/" + UUID_REGEXP;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -51,14 +56,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
+                .cors().and()
                 .authorizeRequests()
+                    .antMatchers(HttpMethod.POST, TRIP_URL + "/posterCreated").permitAll()
+                    .antMatchers(HttpMethod.POST, TRIP_URL + "/presentationCreated").permitAll()
+                    .antMatchers(HttpMethod.POST, TRIP_URL + "/photos/" + ID_REGEXP + "/thumbnail").permitAll()
                     .antMatchers("/api/**").fullyAuthenticated()
-                .and()
-                    .httpBasic()
+                    .and()
+                .httpBasic()
                     .authenticationEntryPoint(authEntryPoint)
-                .and()
-                    .addFilter(baseAuthFilter())
-                    .addFilterAfter(
-                        new CorsFilter(), BasicAuthenticationFilter.class);
+                    .and()
+                .addFilter(baseAuthFilter());
     }
 }
