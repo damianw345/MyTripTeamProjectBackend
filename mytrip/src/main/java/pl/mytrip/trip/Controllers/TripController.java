@@ -6,9 +6,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import pl.mytrip.trip.Services.TripService;
 import pl.mytrip.trip.DTOs.BasicTripDTO;
 import pl.mytrip.trip.DTOs.TripDTO;
+import pl.mytrip.trip.Services.TripService;
 
 import java.util.Date;
 
@@ -46,4 +46,8 @@ public class TripController {
     void deleteTrip(@PathVariable String id) {
         tripService.deleteTrip(id);
     }
+
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    void login() {}
 }
