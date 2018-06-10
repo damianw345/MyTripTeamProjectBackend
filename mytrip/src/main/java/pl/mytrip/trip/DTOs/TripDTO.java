@@ -14,4 +14,6 @@ public class TripDTO {
     private Date start;
     private Date end;
     private List<WaypointDTO> waypoints;
+    private String poster;
+    private String presentation;
 }
