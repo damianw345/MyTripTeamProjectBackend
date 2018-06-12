@@ -46,8 +46,4 @@ public class TripController {
     void deleteTrip(@PathVariable String id) {
         tripService.deleteTrip(id);
     }
-
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    void login() {}
 }
