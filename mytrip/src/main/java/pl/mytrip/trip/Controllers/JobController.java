@@ -50,20 +50,20 @@ public class JobController {
 
     @RequestMapping(value = "/{tripId}/posterCreated", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    public void posterCreated(@PathVariable String tripId, @RequestParam String posterUrl) {
-        queueJobService.addPosterUrl(tripId, posterUrl);
+    public void posterCreated(@PathVariable String tripId, @RequestParam String resultStorageUrl) {
+        queueJobService.addPosterUrl(tripId, resultStorageUrl);
     }
 
     @RequestMapping(value = "/{tripId}/presentationCreated", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    public void videoPresentationCreated(@PathVariable String tripId, @RequestParam String videoPresentationUrl) {
-        queueJobService.addVideoPresentationUrl(tripId, videoPresentationUrl);
+    public void videoPresentationCreated(@PathVariable String tripId, @RequestParam String resultStorageUrl) {
+        queueJobService.addVideoPresentationUrl(tripId, resultStorageUrl);
     }
 
     @RequestMapping(value = "/{tripId}/photos/{photoId}/thumbnail", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    public void thumbnailCreated(@PathVariable String tripId, @PathVariable Long photoId, @RequestParam String thumbnailUrl) {
-        queueJobService.addThumbnailUrl(photoId, thumbnailUrl);
+    public void thumbnailCreated(@PathVariable String tripId, @PathVariable Long photoId, @RequestParam String resultStorageUrl) {
+        queueJobService.addThumbnailUrl(photoId, resultStorageUrl);
     }
 
 }
