@@ -6,6 +6,8 @@ import java.util.Date;
 
 @Data
 public class PhotoWaypointDTO {
+
+    private Long photoId;
     private Long waypointId;
     private Date date;
     private String url;

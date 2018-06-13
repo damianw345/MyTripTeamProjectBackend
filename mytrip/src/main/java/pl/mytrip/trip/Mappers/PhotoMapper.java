@@ -9,7 +9,7 @@ import pl.mytrip.trip.Model.Photo;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface PhotoMapper {
-    @Mapping(target = "photoId", ignore = true)
+
     @Mapping(target = "url", ignore = true)
     @Mapping(target = "thumbnailUrl", ignore = true)
     Photo toEntity(PhotoInfoDTO dto);
