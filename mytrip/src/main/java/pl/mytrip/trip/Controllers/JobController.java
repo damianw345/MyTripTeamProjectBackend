@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import pl.mytrip.trip.DTOs.Jobs.PresentationStatusDTO;
 import pl.mytrip.trip.Services.QueueJobService;
 
 @RestController
@@ -50,20 +51,20 @@ public class JobController {
 
     @RequestMapping(value = "/{tripId}/posterCreated", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    public void posterCreated(@PathVariable String tripId, @RequestParam String resultStorageUrl) {
-        queueJobService.addPosterUrl(tripId, resultStorageUrl);
+    public void posterCreated(@PathVariable String tripId, @RequestBody PresentationStatusDTO dto) {
+        queueJobService.addPosterUrl(tripId, dto.getResultStorageUrl());
     }
 
     @RequestMapping(value = "/{tripId}/presentationCreated", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    public void videoPresentationCreated(@PathVariable String tripId, @RequestParam String resultStorageUrl) {
-        queueJobService.addVideoPresentationUrl(tripId, resultStorageUrl);
+    public void videoPresentationCreated(@PathVariable String tripId, @RequestBody PresentationStatusDTO dto) {
+        queueJobService.addVideoPresentationUrl(tripId, dto.getResultStorageUrl());
     }
 
     @RequestMapping(value = "/{tripId}/photos/{photoId}/thumbnail", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    public void thumbnailCreated(@PathVariable String tripId, @PathVariable Long photoId, @RequestParam String resultStorageUrl) {
-        queueJobService.addThumbnailUrl(photoId, resultStorageUrl);
+    public void thumbnailCreated(@PathVariable String tripId, @PathVariable Long photoId, @RequestBody PresentationStatusDTO dto) {
+        queueJobService.addThumbnailUrl(photoId, dto.getResultStorageUrl());
     }
 
 }
